@@ -1,0 +1,156 @@
+# PyPong - Cursor Rules
+
+## Tech Stack
+- **Language**: Python 3 (target Python 3.8+)
+- **Framework**: Pygame for game development
+- **Architecture**: Object-oriented with scene-based game architecture
+- **Package Structure**: Modular package design (`pypong/`)
+
+## Coding Standards
+
+### Python Style
+- Follow PEP 8 style guidelines
+- Use type hints where appropriate (Python 3.8+)
+- Maximum line length: 100 characters
+- Use 4 spaces for indentation (no tabs)
+- Use descriptive variable and function names (snake_case for functions/variables, PascalCase for classes)
+
+### Import Organization
+- Standard library imports first
+- Third-party imports second (e.g., pygame)
+- Local application imports last
+- Use `import pygame` (not `import pygame as pygame`)
+- Group imports with blank lines between groups
+
+### Code Patterns
+- **Abstract Base Classes**: Use `abc.ABCMeta` and `@abstractmethod` for base classes (as in `SceneBase`)
+- **Scene Management**: Follow the scene-based architecture pattern from `base.py`
+- **Class Design**: Prefer composition over inheritance where appropriate
+- **Constants**: Define magic numbers and strings as class constants or module-level constants
+- **Resource Paths**: Use `pathlib.Path` or `os.path.join` for asset paths, avoid hardcoded strings
+
+### Documentation
+- Use docstrings for classes and public methods
+- Follow Google-style or NumPy-style docstrings
+- Include parameter types and return types in docstrings where type hints aren't used
+
+## Project Structure
+
+```
+pypong/
+├── main.py                 # Entry point
+├── pypong/                 # Main package
+│   ├── __init__.py        # Package initialization
+│   ├── base.py            # Base scene classes and game runner
+│   ├── game.py            # Main game logic (Pong mechanics)
+│   ├── menu.py            # Menu system (MainMenu, OptionsMenu, CreditsMenu)
+│   └── assets/            # Game assets (fonts, images, sounds)
+│       └── *.TTF          # Font files
+├── tests/                 # Unit tests (create if needed)
+│   └── test_*.py
+├── requirements.txt       # Python dependencies
+├── README.md              # Project documentation
+└── LICENSE                # License file
+```
+
+### File Organization
+- **Game Logic**: `pypong/game.py` - Core game mechanics, ball physics, player movement
+- **Menus**: `pypong/menu.py` - All menu-related classes
+- **Base Classes**: `pypong/base.py` - Abstract base classes and scene management
+- **Assets**: `pypong/assets/` - All game assets (fonts, images, sounds)
+- **Tests**: `tests/` - Unit tests (pytest recommended)
+
+## Forbidden Patterns
+
+### Avoid
+- ❌ Hardcoded file paths (use `pathlib.Path` or relative paths)
+- ❌ `import pygame as pygame` (use `import pygame`)
+- ❌ Magic numbers in code (extract to named constants)
+- ❌ Global variables (prefer class attributes or dependency injection)
+- ❌ Mixing game logic with rendering (separate update and render methods)
+- ❌ Direct `sys.exit()` calls in game classes (let scene management handle termination)
+- ❌ Inconsistent naming conventions
+- ❌ Commented-out code blocks (remove or use TODO comments)
+
+### Deprecated/Unused
+- The `base.py` file contains example scenes (`TitleScene`, `GameScene`) that appear unused - consider removing if not needed
+- Avoid duplicating scene management logic if using the `base.py` scene system
+
+## Common Tasks
+
+### Running the Game
+```bash
+python main.py
+```
+
+### Installing Dependencies
+```bash
+# If requirements.txt exists
+pip install -r requirements.txt
+
+# Or install pygame directly
+pip install pygame
+```
+
+### Development Setup
+1. Create virtual environment: `python -m venv venv`
+2. Activate virtual environment: `source venv/bin/activate` (Linux/Mac) or `venv\Scripts\activate` (Windows)
+3. Install dependencies: `pip install pygame`
+4. Run game: `python main.py`
+
+### Testing (if implemented)
+```bash
+# Using pytest
+pytest tests/
+
+# With coverage
+pytest --cov=pypong tests/
+```
+
+### Code Quality
+```bash
+# Linting with flake8
+flake8 pypong/ main.py
+
+# Type checking with mypy (if type hints added)
+mypy pypong/
+
+# Formatting with black
+black pypong/ main.py
+```
+
+## Game-Specific Guidelines
+
+### Pygame Best Practices
+- Always call `pygame.quit()` before exiting
+- Use `pygame.time.Clock()` for frame rate control (60 FPS standard)
+- Handle events in a dedicated method (`check_events()`)
+- Separate update logic from rendering logic
+- Use `pygame.Rect` for collision detection and positioning
+
+### Scene Management
+- All scenes should inherit from `SceneBase`
+- Implement `process_input()`, `update()`, and `render()` methods
+- Use `switch_to_scene()` for scene transitions
+- Use `terminate()` to exit the game
+
+### Game State Management
+- Keep game state in the `Game` class
+- Use string constants for screen states (e.g., 'game', 'menu', 'quit')
+- Avoid global state - pass game instance to menus and scenes
+
+### Asset Loading
+- Load fonts once in `__init__` methods, not in render loops
+- Use relative paths from the package root
+- Consider using `pathlib.Path(__file__).parent` for asset paths
+
+## Code Review Checklist
+- [ ] Follows PEP 8 style guidelines
+- [ ] No hardcoded paths or magic numbers
+- [ ] Proper import organization
+- [ ] Docstrings for public methods/classes
+- [ ] Consistent naming conventions
+- [ ] Separated game logic from rendering
+- [ ] Proper error handling
+- [ ] No commented-out code blocks
+
